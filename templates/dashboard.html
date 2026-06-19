@@ -34,7 +34,7 @@
                         <td>#{{ order.id }}</td>
                         <td>{{ order.name if order.name else 'Walk-in' }}</td>
                         <td>${{ "%.2f"|format(order.total_amount) }}</td>
-                        <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') if order.order_date else '' }}</td>
+                        <td>{{ order.order_date }}</td>
                     </tr>
                     {% else %}
                     <tr><td colspan="4">No recent orders.</td></tr>
