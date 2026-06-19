@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Order Management</h1>
+    <br>
+
+    <div class="split-view">
+        <div class="table-section">
+            <h2>Order History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Staff</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.customer if order.customer else 'Walk-in' }}</td>
+                        <td>{{ order.staff }}</td>
+                        <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                        <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') if order.order_date else '' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5">No orders found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2>Create New Order</h2>
+            <br>
+            <form action="{{ url_for('orders') }}" method="POST">
+                
+                <div class="form-group">
+                    <label>Select Customer (Optional)</label>
+                    <select name="customer_id">
+                        <option value="">Walk-in Customer</option>
+                        {% for customer in customers %}
+                            <option value="{{ customer.id }}">{{ customer.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Product</label>
+                    <select name="product_id" required>
+                        <option value="">-- Choose Product --</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }} (${{ "%.2f"|format(product.price) }} - {{ product.stock }} in stock)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" min="1" value="1" required>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Place Order</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

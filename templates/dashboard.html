@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+    <p>Welcome to the Bakery Management System.</p>
+    <br>
+
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>Total Products</h3>
+            <p>{{ total_products }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Orders</h3>
+            <p>{{ total_orders }}</p>
+        </div>
+    </div>
+
+    <div class="split-view">
+        <div class="table-section">
+            <h2>Recent Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.name if order.name else 'Walk-in' }}</td>
+                        <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                        <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') if order.order_date else '' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4">No recent orders.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-section">
+            <h2 style="color: #e74c3c;">Low Stock Alert</h2>
+            <br>
+            <ul>
+                {% for item in low_stock_items %}
+                    <li style="margin-bottom: 10px;">
+                        <strong>{{ item.name }}</strong> - Only {{ item.stock }} left!
+                    </li>
+                {% else %}
+                    <li>All products are sufficiently stocked.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
